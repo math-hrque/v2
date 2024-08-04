@@ -85,6 +85,13 @@ public class Pedido implements Serializable {
         this.listaPedidoRoupas = listaPedidoRoupas;
     }
 
+    public void pagar(Situacao situacao) {
+        this.situacao = situacao;
+        this.dataPagamento = LocalDateTime.now().withNano(0);
+    }
 
+    public void atualizarSituacao(Situacao situacao) {
+        this.situacao = situacao;
+    }
 
 }

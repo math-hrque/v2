@@ -2,7 +2,6 @@ package br.com.lol.lol.model;
 
 import java.io.Serializable;
 
-import br.com.lol.lol.dto.ClienteDTO;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;

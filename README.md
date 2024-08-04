@@ -127,21 +127,21 @@
 | **Recurso**      | **Método** | **URL**                                      | **Enviar**                     | **Retorna**             |
 |------------------|------------|----------------------------------------------|--------------------------------|-------------------------|
 | **LoginREST**    | POST       | /usuario/login                              | UsuarioRequestDTO               | UsuarioResponseDTO      |
-| **RoupaREST**    | GET        | /roupa/listar                               | null                           | List<RoupaDTO>          |
+| **RoupaREST**    | GET        | /roupa/listar                               | null                           | List < RoupaDTO >          |
 |                  | DELETE     | /roupa/inativar/1                           | idRoupaDTO                      | RoupaDTO                |
 |                  | PUT        | /roupa/atualizar/1?Content-Type=application/json | idRoupaDTO, RoupaDTO            | RoupaDTO                |
 |                  | POST       | /roupa/cadastrar?Content-Type=application/json | RoupaDTO                        | RoupaDTO                |
-| **RelatorioREST**| GET        | /relatorio/visualizarReceitas?dataDe=2024-07-01&dataAte=2024-07-25 | dataDe, dataAte                 | List<ReceitaDTO>        |
-|                  | GET        | /relatorio/visualizarClientes                | null                           | List<ClienteDTO>        |
-|                  | GET        | /relatorio/visualizarClientesFieis           | null                           | List<ClienteFielDTO>    |
-| **PedidoREST**   | GET        | /pedido/listar                              | null                           | List<PedidoDTO>         |
-|                  | GET        | /pedido/listarPorCliente/1                   | idCliente                      | List<PedidoDTO>         |
+| **RelatorioREST**| GET        | /relatorio/visualizarReceitas?dataDe=2024-07-01&dataAte=2024-07-25 | dataDe, dataAte                 | List < ReceitaDTO >        |
+|                  | GET        | /relatorio/visualizarClientes                | null                           | List < ClienteDTO >        |
+|                  | GET        | /relatorio/visualizarClientesFieis           | null                           | List < ClienteFielDTO >    |
+| **PedidoREST**   | GET        | /pedido/listar                              | null                           | List < PedidoDTO >         |
+|                  | GET        | /pedido/listarPorCliente/1                   | idCliente                      | List < PedidoDTO >         |
 |                  | GET        | /pedido/consultar/10000                      | numeroPedido                   | PedidoDTO               |
 |                  | PUT (em construção) | /pedido/atualizarPorCliente/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | PUT (em construção) | /pedido/atualizarPorFuncionario/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | POST (em construção) | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
 | **OrcamentoREST**| POST (em construção) | /orcamento/cadastrar                       | Orcamento                      | Orcamento               |
-| **FuncionarioREST** | GET      | /funcionario/listar                         | null                           | List<FuncionarioDTO>    |
+| **FuncionarioREST** | GET      | /funcionario/listar                         | null                           | List < FuncionarioDTO >    |
 |                  | GET        | /funcionario/consultar/1                    | idFuncionario                   | FuncionarioDTO          |
 |                  | DELETE     | /funcionario/remover/1                      | idFuncionario                   | FuncionarioDTO          |
 |                  | PUT        | /funcionario/atualizar/1?Content-Type=application/json | idFuncionario, Funcionario     | FuncionarioDTO          |

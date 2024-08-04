@@ -1,1 +1,0 @@
-INSERT INTO permissao (tipo_permissao) VALUES ('CLIENTE'), ('FUNCIONARIO');

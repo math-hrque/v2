@@ -140,7 +140,6 @@
 |                  | PUT (em construção) | /pedido/atualizarPorCliente/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | PUT (em construção) | /pedido/atualizarPorFuncionario/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | POST (em construção) | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
-| **OrcamentoREST**| POST (em construção) | /orcamento/cadastrar                       | Orcamento                      | Orcamento               |
 | **FuncionarioREST** | GET      | /funcionario/listar                         | null                           | List < FuncionarioDTO >    |
 |                  | GET        | /funcionario/consultar/1                    | idFuncionario                   | FuncionarioDTO          |
 |                  | DELETE     | /funcionario/remover/1                      | idFuncionario                   | FuncionarioDTO          |

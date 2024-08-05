@@ -111,6 +111,7 @@
 #### 6.4. Noções básicas do projeto:
 - [Diagramas do Projeto](https://drive.google.com/drive/folders/1kzyMzZBEUFbUz0_jb-Jp4EHjCAIM0OWc?usp=sharing);
 - Pasta config: contém arquivos de configuração de Beans da aplicação Spring;
+- Pasta dto: contém os objetos que são enviados e recebidos por JSON no intuito de omitir dados sensíveis como senhas;
 - Pasta enums: contém arquivos de enums da regra de negócio do projeto;
 - Pasta model: contém arquivos de objetos mapeados para o banco de dados, seguindo o modelo ORM;
 - Pasta repository: contém arquivos de implementação JPA para manipular o banco de dados;
@@ -139,7 +140,7 @@
 |                  | GET        | /pedido/consultar/10000                      | numeroPedido                   | PedidoDTO               |
 |                  | PUT        | /pedido/atualizarPorCliente/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | PUT        | /pedido/atualizarPorFuncionario/10001?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
-|                  | POST (em construção) | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
+|                  | POST (pacialmente construída) | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
 | **FuncionarioREST** | GET      | /funcionario/listar                         | null                           | List < FuncionarioDTO >    |
 |                  | GET        | /funcionario/consultar/1                    | idFuncionario                   | FuncionarioDTO          |
 |                  | DELETE     | /funcionario/remover/1                      | idFuncionario                   | FuncionarioDTO          |

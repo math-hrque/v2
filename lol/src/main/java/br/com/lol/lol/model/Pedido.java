@@ -62,7 +62,7 @@ public class Pedido implements Serializable {
     @Setter @Getter
     private Orcamento orcamento;
 
-    @OneToMany(mappedBy="pedido", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="pedido", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter @Getter
     private List<PedidoRoupa> listaPedidoRoupas;
 

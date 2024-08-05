@@ -11,11 +11,14 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import br.com.lol.lol.dto.PedidoDTO;
 import br.com.lol.lol.dto.PedidoRoupaDTO;
-import br.com.lol.lol.enums.TipoSituacao;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name="pedido")
@@ -24,7 +27,7 @@ import java.time.LocalDateTime;
 public class Pedido implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id_pedido")
+    @Column(name="id_pedido", updatable = false)
     @Setter @Getter
     private Long idPedido;
 
@@ -33,13 +36,16 @@ public class Pedido implements Serializable {
     @Setter @Getter
     private Long numeroPedido;
 
-    @Column(name="data_pedido")
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="data_pedido", updatable = false)
     @Setter @Getter
-    private LocalDateTime dataPedido;
+    private OffsetDateTime dataPedido;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name="data_pagamento")
     @Setter @Getter
-    private LocalDateTime dataPagamento;
+    private OffsetDateTime dataPagamento;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="id_cliente")
@@ -51,35 +57,27 @@ public class Pedido implements Serializable {
     @Setter @Getter
     private Situacao situacao;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_orcamento")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="id_orcamento")
     @Setter @Getter
     private Orcamento orcamento;
 
-    @OneToMany(mappedBy = "pedido", fetch=FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy="pedido", fetch=FetchType.LAZY)
     @Setter @Getter
     private List<PedidoRoupa> listaPedidoRoupas;
 
-    public void cadastrar(PedidoDTO pedidoDTO) {
-        this.cliente = new Cliente();
-        this.situacao = new Situacao();
-        this.orcamento = new Orcamento();
-        List<PedidoRoupa> listaPedidoRoupas = new ArrayList<>();
-        this.dataPedido = pedidoDTO.getDataPedido();
-        this.cliente.setIdCliente(pedidoDTO.getIdCliente());
-        if (pedidoDTO.getOrcamento().isAprovado()) {
-            this.situacao.setTipoSituacao(TipoSituacao.EM_ABERTO);
-        } else {
-            this.situacao.setTipoSituacao(TipoSituacao.REJEITADO);
-        }
-        //this.numeroPedido = 0L;
+    public void cadastrar(PedidoDTO pedidoDTO, Situacao situacao) {
+        this.cliente = new Cliente(pedidoDTO.getIdCliente());
+        this.situacao = situacao;
         this.orcamento = pedidoDTO.getOrcamento();
+        List<PedidoRoupa> listaPedidoRoupas = new ArrayList<>();
         for (PedidoRoupaDTO pedidoRoupaDTO  : pedidoDTO.getListaPedidoRoupas()) {
-            PedidoRoupa pedidoRoupa = new PedidoRoupa();
-            pedidoRoupa.setQuantidade(pedidoRoupaDTO.getQuantidade());
             Roupa roupa = new Roupa();
             roupa.atualizar(pedidoRoupaDTO.getRoupa().getIdRoupa(), pedidoRoupaDTO.getRoupa());
+            PedidoRoupa pedidoRoupa = new PedidoRoupa();
+            pedidoRoupa.setQuantidade(pedidoRoupaDTO.getQuantidade());
             pedidoRoupa.setRoupa(roupa);
+            pedidoRoupa.setPedido(this);
             listaPedidoRoupas.add(pedidoRoupa);
         }
         this.listaPedidoRoupas = listaPedidoRoupas;
@@ -87,11 +85,7 @@ public class Pedido implements Serializable {
 
     public void pagar(Situacao situacao) {
         this.situacao = situacao;
-        this.dataPagamento = LocalDateTime.now().withNano(0);
-    }
-
-    public void atualizarSituacao(Situacao situacao) {
-        this.situacao = situacao;
+        this.dataPagamento = LocalDateTime.now().atOffset(ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now()));
     }
 
 }

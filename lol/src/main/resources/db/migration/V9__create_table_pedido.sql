@@ -2,8 +2,8 @@ CREATE SEQUENCE numero_pedido_sequencia START 10000;
 CREATE TABLE pedido (
 	id_pedido INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 	numero_pedido INTEGER DEFAULT nextval('numero_pedido_sequencia') UNIQUE,
-	data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	data_pagamento TIMESTAMP,
+	data_pedido TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	data_pagamento TIMESTAMPTZ,
 	id_cliente INTEGER NOT NULL,
 	id_situacao INTEGER NOT NULL,
 	id_orcamento INTEGER NOT NULL,

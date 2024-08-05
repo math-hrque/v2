@@ -37,4 +37,8 @@ public class Cliente implements Serializable {
     @JoinColumn(name="id_endereco")
     @Setter @Getter
     private Endereco endereco;
+
+    public Cliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
 }

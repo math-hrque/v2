@@ -1,7 +1,11 @@
 package br.com.lol.lol.rest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +45,10 @@ public class RelatorioREST {
         if (dataAte.isBefore(dataDe)) {
             return ResponseEntity.badRequest().build();
         } else {
-            Optional<List<Pedido>> listaPedidoBD = pedidoRepository.findByDataPagamentoBetween(dataDe.atTime(LocalTime.MIN), dataAte.atTime(LocalTime.MAX));
+            ZoneId zoneId = ZoneId.systemDefault();
+            OffsetDateTime dataDeOffset = dataDe.atStartOfDay(zoneId).toOffsetDateTime();
+            OffsetDateTime dataAteOffset = dataAte.atTime(LocalTime.MAX).atOffset(ZoneOffset.from(zoneId.getRules().getOffset(LocalDateTime.now())));
+            Optional<List<Pedido>> listaPedidoBD = pedidoRepository.findByDataPagamentoBetween(dataDeOffset, dataAteOffset);
             if (listaPedidoBD.isPresent()) {
                 Map<LocalDate, Double> receitasMap = listaPedidoBD.get().stream().collect(Collectors.groupingBy(pedido -> 
                     pedido.getDataPagamento().toLocalDate(),Collectors.summingDouble(pedido -> pedido.getOrcamento().getValor())

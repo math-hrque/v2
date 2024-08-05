@@ -36,28 +36,38 @@ public class PedidoREST {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<PedidoDTO> cadastrar(@RequestBody PedidoDTO pedidoDTO) {
-        // if (pedidoDTO.getNumeroPedido() != null) {
-            // Optional<Pedido> pedidoBD = pedidoRepository.findByNumeroPedido(pedidoDTO.getNumeroPedido());
-            // if (pedidoBD.isPresent()) {
-            //     PedidoDTO pedidoDTOExistente = new PedidoDTO(pedidoBD.get());
-            //     return ResponseEntity.status(HttpStatus.CONFLICT).body(pedidoDTOExistente);
-            // } else {
-                Pedido pedido = new Pedido();
-                pedido.cadastrar(pedidoDTO);
-                Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(pedido.getSituacao().getTipoSituacao());
+        if (pedidoDTO.getNumeroPedido() == null) {
+            pedidoDTO.setNumeroPedido(0L);
+        }
+        Optional<Pedido> pedidoBD = pedidoRepository.findByNumeroPedido(pedidoDTO.getNumeroPedido());
+        if (pedidoBD.isPresent()) {
+            PedidoDTO pedidoDTOExistente = new PedidoDTO(pedidoBD.get());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(pedidoDTOExistente);
+        } else {
+            if (pedidoDTO.getOrcamento().isAprovado()) {
+                Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(TipoSituacao.EM_ABERTO);
                 if (situacao.isPresent()) {
-                    pedido.setSituacao(situacao.get());
+                    Pedido pedido = new Pedido();
+                    pedido.cadastrar(pedidoDTO, situacao.get());
                     Pedido pedidoSalva = pedidoRepository.save(pedido);
                     PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
                     return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);
                 } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
-
-            // }
-        // } else {
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        // }
+            } else {
+                Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(TipoSituacao.REJEITADO);
+                if (situacao.isPresent()) {
+                    Pedido pedido = new Pedido();
+                    pedido.cadastrar(pedidoDTO, situacao.get());
+                    Pedido pedidoSalva = pedidoRepository.save(pedido);
+                    PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            }
+        }
     }
 
     @PutMapping("/atualizarPorCliente/{numeroPedido}")
@@ -69,7 +79,7 @@ public class PedidoREST {
                     if (pedidoBD.get().getSituacao().getTipoSituacao().equals(TipoSituacao.EM_ABERTO)) {
                         Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(pedidoDTO.getSituacao());
                         if (situacao.isPresent()) {
-                            pedidoBD.get().atualizarSituacao(situacao.get());
+                            pedidoBD.get().setSituacao(situacao.get());
                             Pedido pedidoSalva = pedidoRepository.save(pedidoBD.get());
                             PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
                             return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);
@@ -110,7 +120,7 @@ public class PedidoREST {
                     if (pedidoBD.get().getSituacao().getTipoSituacao().equals(TipoSituacao.EM_ABERTO)) {
                         Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(pedidoDTO.getSituacao());
                         if (situacao.isPresent()) {
-                            pedidoBD.get().atualizarSituacao(situacao.get());
+                            pedidoBD.get().setSituacao(situacao.get());
                             Pedido pedidoSalva = pedidoRepository.save(pedidoBD.get());
                             PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
                             return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);
@@ -124,7 +134,7 @@ public class PedidoREST {
                     if (pedidoBD.get().getSituacao().getTipoSituacao().equals(TipoSituacao.RECOLHIDO)) {
                         Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(pedidoDTO.getSituacao());
                         if (situacao.isPresent()) {
-                            pedidoBD.get().atualizarSituacao(situacao.get());
+                            pedidoBD.get().setSituacao(situacao.get());
                             Pedido pedidoSalva = pedidoRepository.save(pedidoBD.get());
                             PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
                             return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);
@@ -138,7 +148,7 @@ public class PedidoREST {
                     if (pedidoBD.get().getSituacao().getTipoSituacao().equals(TipoSituacao.PAGO)) {
                         Optional<Situacao> situacao = situacaoRepository.findByTipoSituacao(pedidoDTO.getSituacao());
                         if (situacao.isPresent()) {
-                            pedidoBD.get().atualizarSituacao(situacao.get());
+                            pedidoBD.get().setSituacao(situacao.get());
                             Pedido pedidoSalva = pedidoRepository.save(pedidoBD.get());
                             PedidoDTO pedidoDTOSalva = new PedidoDTO(pedidoSalva);
                             return ResponseEntity.status(HttpStatus.CREATED).body(pedidoDTOSalva);

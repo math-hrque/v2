@@ -1,6 +1,8 @@
 package br.com.lol.lol.dto;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +41,12 @@ public class PedidoDTO {
 
     public PedidoDTO(Pedido pedido) {
         this.numeroPedido = pedido.getNumeroPedido();
-        this.dataPedido = pedido.getDataPedido();
-        this.dataPagamento = pedido.getDataPagamento();
+        ZonedDateTime zonedDateTimeDataPedido = pedido.getDataPedido().atZoneSameInstant(ZoneId.systemDefault());
+        this.dataPedido =  zonedDateTimeDataPedido.toLocalDateTime().withNano(0);;
+        if(pedido.getDataPagamento() != null) {
+            ZonedDateTime zonedDateTimeDataPagamento = pedido.getDataPagamento().atZoneSameInstant(ZoneId.systemDefault());
+            this.dataPagamento = zonedDateTimeDataPagamento.toLocalDateTime().withNano(0);;
+        }
         this.idCliente = pedido.getCliente().getIdCliente();
         this.situacao = pedido.getSituacao().getTipoSituacao();
         this.orcamento = pedido.getOrcamento();

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,7 +67,7 @@ public class RelatorioREST {
     
                 return ResponseEntity.ok(listaReceitaDTO);
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         }
     }
@@ -75,7 +76,7 @@ public class RelatorioREST {
     public ResponseEntity<List<ClienteDTO>> visualizarClientes() {
         List<Cliente> listaClienteBD = clienteRepository.findAll();
         if (listaClienteBD.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             List<ClienteDTO> listaClienteDTO = listaClienteBD.stream().map(cliente -> {
                 ClienteDTO clienteDTO = new ClienteDTO(cliente);
@@ -90,7 +91,7 @@ public class RelatorioREST {
     public ResponseEntity<List<ClienteFielDTO>> visualizarClientesFieis() {
         List<Pedido> listaPedidoBD = pedidoRepository.findAll();
         if (listaPedidoBD.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             List<Pedido> listaPedidosPagosMap = listaPedidoBD.stream().filter(pedido -> pedido.getDataPagamento() != null).collect(Collectors.toList());
             Map<Cliente, List<Pedido>> clienteListaPedidosPagosMap = listaPedidosPagosMap.stream().collect(Collectors.groupingBy(Pedido::getCliente));

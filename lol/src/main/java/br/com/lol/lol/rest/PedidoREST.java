@@ -107,7 +107,7 @@ public class PedidoREST {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -162,7 +162,7 @@ public class PedidoREST {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -171,14 +171,14 @@ public class PedidoREST {
         return pedidoRepository.findByNumeroPedido(numeroPedido).map(pedidoBD -> {
             PedidoDTO pedidoDTO = new PedidoDTO(pedidoBD);
             return ResponseEntity.ok(pedidoDTO);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/listar")
     public ResponseEntity<List<PedidoDTO>> listar() {
         List<Pedido> listaPedidoBD = pedidoRepository.findAll();
         if (listaPedidoBD.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             List<PedidoDTO> listaPedidoDTO = listaPedidoBD.stream().map(pedido -> {
                 PedidoDTO pedidoDTO = new PedidoDTO(pedido);
@@ -193,7 +193,7 @@ public class PedidoREST {
     public ResponseEntity<List<PedidoDTO>> listarPorCliente(@PathVariable("idCliente") Long idCliente) {
         Optional<List<Pedido>> listaPedidoBD = pedidoRepository.findByClienteIdCliente(idCliente);
         if (listaPedidoBD.get().isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             List<PedidoDTO> listaPedidoDTO = listaPedidoBD.get().stream().map(pedido -> {
                 PedidoDTO pedidoDTO = new PedidoDTO(pedido);

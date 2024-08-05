@@ -61,7 +61,7 @@ public class ClienteREST {
         return clienteRepository.findByUsuarioIdUsuario(idUsuario).map(clienteBD -> {
             ClienteDTO clienteDTO = new ClienteDTO(clienteBD);
             return ResponseEntity.ok(clienteDTO);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
     
 }

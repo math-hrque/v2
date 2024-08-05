@@ -56,7 +56,7 @@ public class RoupaREST {
             Roupa roupaSalva = roupaRepository.save(roupa);
             RoupaDTO roupaDTOSalva = new RoupaDTO(roupaSalva);
             return ResponseEntity.ok(roupaDTOSalva);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @DeleteMapping("/inativar/{idRoupa}")
@@ -66,7 +66,7 @@ public class RoupaREST {
             Roupa roupaInativada = roupaRepository.save(roupaBD);
             RoupaDTO roupaDTOInativada = new RoupaDTO(roupaInativada);
             return ResponseEntity.ok(roupaDTOInativada);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/listar")
@@ -76,7 +76,7 @@ public class RoupaREST {
             List<RoupaDTO> listaRoupaDTO = listaRoupaBD.get().stream().map(roupa -> new RoupaDTO(roupa)).collect(Collectors.toList());
             return ResponseEntity.ok(listaRoupaDTO);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 

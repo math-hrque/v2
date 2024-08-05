@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lol.lol.dto.FuncionarioDTO;
+import br.com.lol.lol.enums.TipoPermissao;
 import br.com.lol.lol.model.Funcionario;
+import br.com.lol.lol.model.Permissao;
 import br.com.lol.lol.repository.FuncionarioRepository;
+import br.com.lol.lol.repository.PermissaoRepository;
 
 @CrossOrigin
 @RestController
@@ -33,41 +36,85 @@ public class FuncionarioREST {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
+    @Autowired
+    private PermissaoRepository permissaoRepository;
+
     @PostMapping("/cadastrar")
     public ResponseEntity<FuncionarioDTO> cadastrar(@RequestBody Funcionario funcionario) {
-        funcionario.getUsuario().setEmail(funcionario.getUsuario().getEmail().toLowerCase());
-        Optional<Funcionario> funcionarioBD = funcionarioRepository.findByUsuarioEmail(funcionario.getUsuario().getEmail());
-        if (funcionarioBD.isPresent()) {
-            FuncionarioDTO funcionarioDTOExistente = new FuncionarioDTO(funcionarioBD.get());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(funcionarioDTOExistente);
+        if (validaDadosCadastrarFuncionario(funcionario)) {
+            funcionario.getUsuario().setEmail(funcionario.getUsuario().getEmail().toLowerCase());
+            Optional<Funcionario> funcionarioBD = funcionarioRepository.findByUsuarioEmail(funcionario.getUsuario().getEmail());
+            if (funcionarioBD.isPresent()) {
+                FuncionarioDTO funcionarioDTOExistente = new FuncionarioDTO(funcionarioBD.get());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(funcionarioDTOExistente);
+            } else {
+                Optional<Permissao> permissao = permissaoRepository.findByTipoPermissao(funcionario.getUsuario().getPermissao().getTipoPermissao());
+                if (permissao.isPresent()) {
+                    funcionario.getUsuario().setPermissao(permissao.get());
+                    funcionario.getUsuario().setSenha(passwordEncoder.encode(funcionario.getUsuario().getSenha()));
+                    Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
+                    FuncionarioDTO funcionarioDTOSalvo = new FuncionarioDTO(funcionarioSalvo);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioDTOSalvo);
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            } 
         } else {
-            funcionario.getUsuario().setSenha(passwordEncoder.encode(funcionario.getUsuario().getSenha()));
-            Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
-            FuncionarioDTO funcionarioDTOSalvo = new FuncionarioDTO(funcionarioSalvo);
-            return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioDTOSalvo);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    public boolean validaDadosCadastrarFuncionario(Funcionario funcionario) {
+        if (funcionario.getUsuario().getEmail() == null || funcionario.getUsuario().getEmail().isEmpty() ||
+            funcionario.getUsuario().getSenha() == null || funcionario.getUsuario().getSenha().isEmpty() ||
+            funcionario.getUsuario().getNome() == null || funcionario.getUsuario().getNome().isEmpty() ||
+            funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO.toString()) ||
+            funcionario.getDataNascimento() == null)
+            return false;
+        else
+            return true;
     }
 
     @PutMapping("/atualizar/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> atualizar(@PathVariable("idFuncionario") Long idFuncionario, @RequestBody Funcionario funcionario) {
-        Optional<Funcionario> funcionarioBD = funcionarioRepository.findById(idFuncionario);
-        if (funcionarioBD.isPresent()) {
-            Optional<Funcionario> funcionarioExistente = funcionarioRepository.findByUsuarioEmail(funcionario.getUsuario().getEmail());
-            if (funcionarioExistente.isPresent() && !funcionarioExistente.get().getUsuario().getIdUsuario().equals(funcionarioBD.get().getUsuario().getIdUsuario())) {
-                FuncionarioDTO funcionarioDTOExistente = new FuncionarioDTO(funcionarioExistente.get());
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(funcionarioDTOExistente);
+        if (validaDadosAtualizarFuncionario(funcionario)) {
+            Optional<Funcionario> funcionarioBD = funcionarioRepository.findById(idFuncionario);
+            if (funcionarioBD.isPresent()) {
+                funcionario.getUsuario().setEmail(funcionario.getUsuario().getEmail().toLowerCase());
+                Optional<Funcionario> funcionarioExistente = funcionarioRepository.findByUsuarioEmail(funcionario.getUsuario().getEmail());
+                if (funcionarioExistente.isPresent() && !funcionarioExistente.get().getUsuario().getIdUsuario().equals(funcionarioBD.get().getUsuario().getIdUsuario())) {
+                    FuncionarioDTO outroFuncionarioDTOExistente = new FuncionarioDTO(funcionarioExistente.get());
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(outroFuncionarioDTOExistente);
+                } else {
+                    funcionario.setIdFuncionario(funcionarioBD.get().getIdFuncionario());
+                    funcionario.getUsuario().setIdUsuario(funcionarioBD.get().getUsuario().getIdUsuario());
+                    funcionario.getUsuario().setPermissao(funcionarioBD.get().getUsuario().getPermissao());
+                    if (funcionario.getUsuario().getSenha() == null || funcionario.getUsuario().getSenha().isEmpty()) {
+                        funcionario.getUsuario().setSenha(funcionarioBD.get().getUsuario().getSenha());
+                    } else {
+                        funcionario.getUsuario().setSenha(passwordEncoder.encode(funcionario.getUsuario().getSenha()));
+                    }
+                    Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
+                    FuncionarioDTO funcionarioDTOSalvo = new FuncionarioDTO(funcionarioSalvo);
+                    return ResponseEntity.ok(funcionarioDTOSalvo);
+                }
             } else {
-                funcionario.setIdFuncionario(idFuncionario);
-                funcionario.getUsuario().setIdUsuario(funcionarioBD.get().getUsuario().getIdUsuario());
-                funcionario.getUsuario().setPermissao(funcionarioBD.get().getUsuario().getPermissao());
-                funcionario.getUsuario().setSenha(passwordEncoder.encode(funcionario.getUsuario().getSenha()));
-                Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
-                FuncionarioDTO funcionarioDTOSalvo = new FuncionarioDTO(funcionarioSalvo);
-                return ResponseEntity.ok(funcionarioDTOSalvo);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    public boolean validaDadosAtualizarFuncionario(Funcionario funcionario) {
+        if (funcionario.getUsuario().getIdUsuario() == null || funcionario.getUsuario().getIdUsuario() == 0 ||
+            funcionario.getUsuario().getEmail() == null || funcionario.getUsuario().getEmail().isEmpty() ||
+            funcionario.getUsuario().getNome() == null || funcionario.getUsuario().getNome().isEmpty() ||
+            funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO.toString()) ||
+            funcionario.getDataNascimento() == null)
+            return false;
+        else
+            return true;
     }
 
     @DeleteMapping("/remover/{idFuncionario}")
@@ -76,7 +123,7 @@ public class FuncionarioREST {
             funcionarioRepository.delete(funcionarioBD);
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionarioBD);
             return ResponseEntity.ok(funcionarioDTO);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/consultar/{idUsuario}")
@@ -84,20 +131,19 @@ public class FuncionarioREST {
         return funcionarioRepository.findByUsuarioIdUsuario(idUsuario).map(funcionarioBD -> {
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionarioBD);
             return ResponseEntity.ok(funcionarioDTO);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/listar")
     public ResponseEntity<List<FuncionarioDTO>> listar() {
         List<Funcionario> listaFuncionarioBD = funcionarioRepository.findAll();
         if (listaFuncionarioBD.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             List<FuncionarioDTO> listaFuncionarioDTO = listaFuncionarioBD.stream().map(funcionario -> {
                 FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionario);
                 return funcionarioDTO;
             }).collect(Collectors.toList());
-
             return ResponseEntity.ok(listaFuncionarioDTO);
         }
     }

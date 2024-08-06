@@ -69,6 +69,9 @@ public class Pedido implements Serializable {
         this.cliente = new Cliente(pedidoDTO.getIdCliente());
         this.situacao = situacao;
         this.orcamento = pedidoDTO.getOrcamento();
+        this.dataPedido = null;
+        this.dataPagamento = null;
+        this.orcamento.setIdOrcamento(null);
         List<PedidoRoupa> listaPedidoRoupas = new ArrayList<>();
         for (PedidoRoupaDTO pedidoRoupaDTO  : pedidoDTO.getListaPedidoRoupas()) {
             Roupa roupa = new Roupa();

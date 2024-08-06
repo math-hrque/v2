@@ -69,7 +69,7 @@ public class FuncionarioREST {
         boolean emailValido = funcionario.getUsuario().getEmail() != null && !funcionario.getUsuario().getEmail().isEmpty();
         boolean senhaValida = funcionario.getUsuario().getSenha() != null && !funcionario.getUsuario().getSenha().isEmpty();
         boolean nomeValido = funcionario.getUsuario().getNome() != null && !funcionario.getUsuario().getNome().isEmpty();
-        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO.toString());
+        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().toString().equals(TipoPermissao.FUNCIONARIO.toString());
         boolean dataNascimentoValida = funcionario.getDataNascimento() != null;
         return emailValido && senhaValida && nomeValido && permissaoValida && dataNascimentoValida && idUsuarioValido;
     }
@@ -109,7 +109,7 @@ public class FuncionarioREST {
         boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() != null && funcionario.getUsuario().getIdUsuario() != 0;
         boolean emailValido = funcionario.getUsuario().getEmail() != null && !funcionario.getUsuario().getEmail().isEmpty();
         boolean nomeValido = funcionario.getUsuario().getNome() != null && !funcionario.getUsuario().getNome().isEmpty();
-        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO.toString());
+        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().toString().equals(TipoPermissao.FUNCIONARIO.toString());
         boolean dataNascimentoValida = funcionario.getDataNascimento() != null;
         return idUsuarioValido && emailValido && nomeValido && permissaoValida && dataNascimentoValida;
     }

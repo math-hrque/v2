@@ -31,21 +31,27 @@ public class RoupaREST {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<RoupaDTO> cadastrar(@RequestBody RoupaDTO roupaDTO) {
-        if (roupaDTO.getIdRoupa() == null) {
-            roupaDTO.setIdRoupa(0L);
-        }
-        Optional<Roupa> roupaBD = roupaRepository.findById(roupaDTO.getIdRoupa());
-        if (roupaBD.isPresent()) {
-            RoupaDTO roupaDTOExistente = new RoupaDTO(roupaBD.get());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(roupaDTOExistente);
+        if (validaDadosCadastrarRoupa(roupaDTO)) {
+            Optional<Roupa> roupaBD = roupaRepository.findById(roupaDTO.getIdRoupa());
+            if (roupaBD.isPresent()) {
+                RoupaDTO roupaDTOExistente = new RoupaDTO(roupaBD.get());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(roupaDTOExistente);
+            } else {
+                Roupa roupa = new Roupa();
+                roupa.cadastrar(roupaDTO);
+                Roupa roupaSalva = roupaRepository.save(roupa);
+                RoupaDTO roupaDTOSalva = new RoupaDTO(roupaSalva);
+                return ResponseEntity.status(HttpStatus.CREATED).body(roupaDTOSalva);
+            }
         } else {
-            Roupa roupa = new Roupa();
-            roupa.cadastrar(roupaDTO);
-            Roupa roupaSalva = roupaRepository.save(roupa);
-            RoupaDTO roupaDTOSalva = new RoupaDTO(roupaSalva);
-            return ResponseEntity.status(HttpStatus.CREATED).body(roupaDTOSalva);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
 
+    public boolean validaDadosCadastrarRoupa(RoupaDTO roupaDTO) {
+        boolean idRoupaValido = roupaDTO.getIdRoupa() == 0;
+        boolean descricaoValida = !roupaDTO.getDescricao().isEmpty();
+        return idRoupaValido && descricaoValida;
     }
 
     @PutMapping("/atualizar/{idRoupa}")

@@ -65,13 +65,12 @@ public class FuncionarioREST {
     }
 
     public boolean validaDadosCadastrarFuncionario(Funcionario funcionario) {
-        boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() == null || funcionario.getUsuario().getIdUsuario() == 0;
-        boolean emailValido = funcionario.getUsuario().getEmail() != null && !funcionario.getUsuario().getEmail().isEmpty();
-        boolean senhaValida = funcionario.getUsuario().getSenha() != null && !funcionario.getUsuario().getSenha().isEmpty();
-        boolean nomeValido = funcionario.getUsuario().getNome() != null && !funcionario.getUsuario().getNome().isEmpty();
-        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().toString().equals(TipoPermissao.FUNCIONARIO.toString());
-        boolean dataNascimentoValida = funcionario.getDataNascimento() != null;
-        return emailValido && senhaValida && nomeValido && permissaoValida && dataNascimentoValida && idUsuarioValido;
+        boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() == 0;
+        boolean emailValido = !funcionario.getUsuario().getEmail().isEmpty();
+        boolean senhaValida = !funcionario.getUsuario().getSenha().isEmpty();
+        boolean nomeValido = !funcionario.getUsuario().getNome().isEmpty();
+        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO);
+        return idUsuarioValido && emailValido && senhaValida && nomeValido && permissaoValida;
     }
 
     @PutMapping("/atualizar/{idFuncionario}")
@@ -106,12 +105,11 @@ public class FuncionarioREST {
     }
 
     public boolean validaDadosAtualizarFuncionario(Funcionario funcionario) {
-        boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() != null && funcionario.getUsuario().getIdUsuario() != 0;
-        boolean emailValido = funcionario.getUsuario().getEmail() != null && !funcionario.getUsuario().getEmail().isEmpty();
-        boolean nomeValido = funcionario.getUsuario().getNome() != null && !funcionario.getUsuario().getNome().isEmpty();
-        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao() != null && funcionario.getUsuario().getPermissao().getTipoPermissao().toString().equals(TipoPermissao.FUNCIONARIO.toString());
-        boolean dataNascimentoValida = funcionario.getDataNascimento() != null;
-        return idUsuarioValido && emailValido && nomeValido && permissaoValida && dataNascimentoValida;
+        boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() != 0;
+        boolean emailValido = !funcionario.getUsuario().getEmail().isEmpty();
+        boolean nomeValido = !funcionario.getUsuario().getNome().isEmpty();
+        boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO);
+        return idUsuarioValido && emailValido && nomeValido && permissaoValida;
     }
 
     @DeleteMapping("/remover/{idFuncionario}")

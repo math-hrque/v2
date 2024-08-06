@@ -31,8 +31,7 @@ public class Pedido implements Serializable {
     @Setter @Getter
     private Long idPedido;
 
-    @Column(name="numero_pedido",  unique = true, insertable = false, updatable = false)
-    @SequenceGenerator(name = "numero_pedido_seq", sequenceName = "numero_pedido_sequencia", initialValue = 10000, allocationSize = 1)
+    @Column(name="numero_pedido",  nullable = false, unique = true)
     @Setter @Getter
     private Long numeroPedido;
 

@@ -140,7 +140,7 @@
 |                  | GET        | /pedido/consultar/10000                      | numeroPedido                   | PedidoDTO               |
 |                  | PUT        | /pedido/atualizarPorCliente/10000?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
 |                  | PUT        | /pedido/atualizarPorFuncionario/10001?Content-Type=application/json | numeroPedido, PedidoDTO        | PedidoDTO               |
-|                  | POST (pacialmente construída) | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
+|                  | POST  | /pedido/cadastrar                          | PedidoDTO                      | PedidoDTO               |
 | **FuncionarioREST** | GET      | /funcionario/listar                         | null                           | List < FuncionarioDTO >    |
 |                  | GET        | /funcionario/consultar/1                    | idUsuario                   | FuncionarioDTO          |
 |                  | DELETE     | /funcionario/remover/1                      | idFuncionario                   | FuncionarioDTO          |

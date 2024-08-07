@@ -14,6 +14,7 @@ import br.com.lol.lol.model.Pedido;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     Optional<Pedido> findByNumeroPedido(Long numeroPedido);
     Optional<List<Pedido>> findByClienteIdCliente(Long idCliente);
+    Optional<List<Pedido>> findByClienteUsuarioIdUsuario(Long idUsuario);
     Optional<List<Pedido>> findByDataPagamentoBetween(OffsetDateTime dataDe, OffsetDateTime dataAte);
     @Query("SELECT COALESCE(MAX(p.numeroPedido), 0) FROM Pedido p")
     Optional<Long> findMaxNumeroPedido();

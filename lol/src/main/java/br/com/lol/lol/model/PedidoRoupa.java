@@ -19,17 +19,23 @@ public class PedidoRoupa implements Serializable {
     @Setter @Getter
     private Long idPedidoRoupa;
 
-    @Column(name="quantidade")
+    @Column(name="quantidade", updatable = false, nullable = false)
     @Setter @Getter
     private int quantidade;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id_pedido")
+    @JoinColumn(name="id_pedido", updatable = false, nullable = false)
     @Setter @Getter
     private Pedido pedido;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id_roupa")
+    @JoinColumn(name="id_roupa", updatable = false, nullable = false)
     @Setter @Getter
     private Roupa roupa;
+
+    public void cadastrar(int quantidade, Pedido pedido, Roupa roupa) {
+        this.quantidade = quantidade;
+        this.pedido = pedido;
+        this.roupa = roupa;
+    }
 }

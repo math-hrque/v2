@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.lol.lol.dto.EnderecoApiDTO;
 import br.com.lol.lol.dto.EnderecoDTO;
-import br.com.lol.lol.model.EnderecoApi;
 
 @Service
 public class EnderecoService {
@@ -22,13 +22,13 @@ public class EnderecoService {
         if (cep.matches(CEP_PATTERN)) {
             try {
                 String url = "https://viacep.com.br/ws/" + cep + "/json/";
-                EnderecoApi enderecoApi = restTemplate.getForObject(url, EnderecoApi.class);
+                EnderecoApiDTO enderecoApiDTO = restTemplate.getForObject(url, EnderecoApiDTO.class);
 
-                if (enderecoApi.getCep() == null) {
+                if (enderecoApiDTO.getCep() == null) {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
                 
-                EnderecoDTO enderecoDTO = new EnderecoDTO(enderecoApi);
+                EnderecoDTO enderecoDTO = new EnderecoDTO(enderecoApiDTO);
                 return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
     
             } catch (Exception e) {

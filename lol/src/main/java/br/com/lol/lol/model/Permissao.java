@@ -22,7 +22,7 @@ public class Permissao implements Serializable {
     private Long idPermissao;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="tipo_permissao", unique = true)
+    @Column(name="tipo_permissao", insertable = false, updatable = false, nullable = false, unique = true)
     @Setter @Getter
     private TipoPermissao tipoPermissao;
 }

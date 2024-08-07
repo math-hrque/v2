@@ -115,19 +115,19 @@ public class FuncionarioService {
 
     public boolean validaDadosCadastrarFuncionario(Funcionario funcionario) {
         boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() == 0;
+        boolean idFuncionarioValido = funcionario.getIdFuncionario() == 0;
         boolean emailValido = !funcionario.getUsuario().getEmail().isEmpty();
         boolean senhaValida = !funcionario.getUsuario().getSenha().isEmpty();
         boolean nomeValido = !funcionario.getUsuario().getNome().isEmpty();
         boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO);
-        return idUsuarioValido && emailValido && senhaValida && nomeValido && permissaoValida;
+        return idUsuarioValido && idFuncionarioValido && emailValido && senhaValida && nomeValido && permissaoValida;
     }
 
     public boolean validaDadosAtualizarFuncionario(Funcionario funcionario) {
-        boolean idUsuarioValido = funcionario.getUsuario().getIdUsuario() != 0;
         boolean emailValido = !funcionario.getUsuario().getEmail().isEmpty();
         boolean nomeValido = !funcionario.getUsuario().getNome().isEmpty();
         boolean permissaoValida = funcionario.getUsuario().getPermissao().getTipoPermissao().equals(TipoPermissao.FUNCIONARIO);
-        return idUsuarioValido && emailValido && nomeValido && permissaoValida;
+        return emailValido && nomeValido && permissaoValida;
     }
     
 }

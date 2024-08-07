@@ -24,18 +24,28 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     
     public ResponseEntity<UsuarioResponseDTO> login(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
-        usuarioRequestDTO.setEmail(usuarioRequestDTO.getEmail().toLowerCase());
-        Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuarioRequestDTO.getEmail());
-        if (usuarioBD.isPresent()) {
-            if (passwordEncoder.matches(usuarioRequestDTO.getSenha(), usuarioBD.get().getSenha())) {
-                UsuarioResponseDTO usuarioResponseDTO = new UsuarioResponseDTO(usuarioBD.get());
-                return ResponseEntity.ok(usuarioResponseDTO);
+        if (validaDadosLogin(usuarioRequestDTO)) {
+            usuarioRequestDTO.setEmail(usuarioRequestDTO.getEmail().toLowerCase());
+            Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuarioRequestDTO.getEmail());
+            if (usuarioBD.isPresent()) {
+                if (passwordEncoder.matches(usuarioRequestDTO.getSenha(), usuarioBD.get().getSenha())) {
+                    UsuarioResponseDTO usuarioResponseDTO = new UsuarioResponseDTO(usuarioBD.get());
+                    return ResponseEntity.ok(usuarioResponseDTO);
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    public boolean validaDadosLogin(UsuarioRequestDTO usuarioRequestDTO) {
+        boolean emailValido = !usuarioRequestDTO.getEmail().isEmpty();
+        boolean senhaValida = !usuarioRequestDTO.getSenha().isEmpty();
+        return emailValido && senhaValida;
     }
 
 }

@@ -1,11 +1,11 @@
-package br.com.lol.lol.model;
+package br.com.lol.lol.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class EnderecoApi {
+public class EnderecoApiDTO {
     @JsonProperty("cep")
     @Setter @Getter
     private String cep;

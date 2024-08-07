@@ -27,32 +27,32 @@ import java.time.ZoneOffset;
 public class Pedido implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id_pedido", updatable = false)
+    @Column(name="id_pedido")
     @Setter @Getter
     private Long idPedido;
 
-    @Column(name="numero_pedido",  nullable = false, unique = true)
+    @Column(name="numero_pedido", updatable = false, nullable = false, unique = true)
     @Setter @Getter
     private Long numeroPedido;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="data_pedido", updatable = false)
+    @Column(name="data_pedido", insertable = false, updatable = false, nullable = false)
     @Setter @Getter
     private OffsetDateTime dataPedido;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="data_pagamento")
+    @Column(name="data_pagamento", insertable = false)
     @Setter @Getter
     private OffsetDateTime dataPagamento;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id_cliente")
+    @JoinColumn(name="id_cliente", updatable = false, nullable = false)
     @Setter @Getter
     private Cliente cliente;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id_situacao")
+    @JoinColumn(name="id_situacao", nullable = false)
     @Setter @Getter
     private Situacao situacao;
 
@@ -69,17 +69,13 @@ public class Pedido implements Serializable {
         this.cliente = new Cliente(pedidoDTO.getIdCliente());
         this.situacao = situacao;
         this.orcamento = pedidoDTO.getOrcamento();
-        this.dataPedido = null;
-        this.dataPagamento = null;
         this.orcamento.setIdOrcamento(null);
         List<PedidoRoupa> listaPedidoRoupas = new ArrayList<>();
         for (PedidoRoupaDTO pedidoRoupaDTO  : pedidoDTO.getListaPedidoRoupas()) {
             Roupa roupa = new Roupa();
             roupa.atualizar(pedidoRoupaDTO.getRoupa().getIdRoupa(), pedidoRoupaDTO.getRoupa());
             PedidoRoupa pedidoRoupa = new PedidoRoupa();
-            pedidoRoupa.setQuantidade(pedidoRoupaDTO.getQuantidade());
-            pedidoRoupa.setRoupa(roupa);
-            pedidoRoupa.setPedido(this);
+            pedidoRoupa.cadastrar(pedidoRoupaDTO.getQuantidade(), this, roupa);
             listaPedidoRoupas.add(pedidoRoupa);
         }
         this.listaPedidoRoupas = listaPedidoRoupas;

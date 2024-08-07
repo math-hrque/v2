@@ -21,19 +21,19 @@ public class Roupa implements Serializable {
     @Setter @Getter
     private Long idRoupa;
 
-    @Column(name="descricao")
+    @Column(name="descricao", nullable = false)
     @Setter @Getter
     private String descricao;
 
-    @Column(name="preco")
+    @Column(name="preco", nullable = false)
     @Setter @Getter
     private double preco;
 
-    @Column(name="prazo_dias")
+    @Column(name="prazo_dias", nullable = false)
     @Setter @Getter
     private int prazoDias;
 
-    @Column(name="ativo")
+    @Column(name="ativo", insertable = false)
     @Setter @Getter
     private boolean ativo = true;
 

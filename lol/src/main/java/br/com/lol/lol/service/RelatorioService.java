@@ -38,7 +38,7 @@ public class RelatorioService {
     
     public ResponseEntity<List<ReceitaDTO>> visualizarReceitas(@RequestParam("dataDe") LocalDate dataDe, @RequestParam("dataAte") LocalDate dataAte) {
         if (dataAte.isBefore(dataDe)) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
             ZoneId zoneId = ZoneId.systemDefault();
             OffsetDateTime dataDeOffset = dataDe.atStartOfDay(zoneId).toOffsetDateTime();

@@ -20,21 +20,21 @@ public class Cliente implements Serializable {
     @Setter @Getter
     private Long idCliente;
 
-    @Column(name="cpf", unique = true)
+    @Column(name="cpf", nullable = false, unique = true)
     @Setter @Getter
     private String cpf;
 
-    @Column(name="telefone")
+    @Column(name="telefone", nullable = false)
     @Setter @Getter
     private String telefone;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false)
     @Setter @Getter
     private Usuario usuario;
 
     @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="id_endereco")
+    @JoinColumn(name="id_endereco", nullable = false)
     @Setter @Getter
     private Endereco endereco;
 

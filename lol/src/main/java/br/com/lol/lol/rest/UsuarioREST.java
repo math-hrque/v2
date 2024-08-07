@@ -24,4 +24,5 @@ public class UsuarioREST {
     public ResponseEntity<UsuarioResponseDTO> login(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         return usuarioService.login(usuarioRequestDTO);
     }
+
 }

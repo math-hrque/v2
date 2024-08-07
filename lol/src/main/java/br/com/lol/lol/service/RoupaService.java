@@ -58,12 +58,6 @@ public class RoupaService {
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    public boolean validaDadosCadastrarRoupa(RoupaDTO roupaDTO) {
-        boolean idRoupaValido = roupaDTO.getIdRoupa() == 0;
-        boolean descricaoValida = !roupaDTO.getDescricao().isEmpty();
-        return idRoupaValido && descricaoValida;
-    }
-
     public ResponseEntity<List<RoupaDTO>> listar() {
         Optional<List<Roupa>> listaRoupaBD = roupaRepository.findByAtivo(true);
         if (listaRoupaBD.isPresent()) {
@@ -72,6 +66,12 @@ public class RoupaService {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    public boolean validaDadosCadastrarRoupa(RoupaDTO roupaDTO) {
+        boolean idRoupaValido = roupaDTO.getIdRoupa() == 0;
+        boolean descricaoValida = !roupaDTO.getDescricao().isEmpty();
+        return idRoupaValido && descricaoValida;
     }
 
 }

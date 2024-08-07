@@ -22,7 +22,7 @@ public class Situacao implements Serializable {
     private Long idSituacao;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="tipo_situacao", unique = true)
+    @Column(name="tipo_situacao", insertable = false, updatable = false, nullable = false, unique = true)
     @Setter @Getter
     private TipoSituacao tipoSituacao;
 }

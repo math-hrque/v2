@@ -22,12 +22,12 @@ public class Funcionario implements Serializable {
     private Long idFuncionario;
 
     @Temporal(TemporalType.DATE)
-    @Column(name="data_nascimento")
+    @Column(name="data_nascimento", nullable = false)
     @Setter @Getter
     private LocalDate dataNascimento;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false)
     @Setter @Getter
     private Usuario usuario;
 }

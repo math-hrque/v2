@@ -49,9 +49,14 @@ public class PedidoREST {
         return pedidoService.listar();
     }
 
-    @GetMapping("/listarPorCliente/{idCliente}")
-    public ResponseEntity<List<PedidoDTO>> listarPorCliente(@PathVariable("idCliente") Long idCliente) {
-        return pedidoService.listarPorCliente(idCliente);
+    @GetMapping("/listarPorIdUsuario/{idUsuario}")
+    public ResponseEntity<List<PedidoDTO>> listarPorIdUsuario(@PathVariable("idUsuario") Long idUsuario) {
+        return pedidoService.listarPorIdUsuario(idUsuario);
+    }
+
+    @GetMapping("/listarPorIdCliente/{idCliente}")
+    public ResponseEntity<List<PedidoDTO>> listarPorIdCliente(@PathVariable("idCliente") Long idCliente) {
+        return pedidoService.listarPorIdCliente(idCliente);
     }
 
 }

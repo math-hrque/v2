@@ -1,7 +1,6 @@
 package br.com.lol.lol.dto;
 
 import br.com.lol.lol.model.Endereco;
-import br.com.lol.lol.model.EnderecoApi;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,11 +40,11 @@ public class EnderecoDTO {
         this.complemento = endereco.getComplemento();
     }
 
-    public EnderecoDTO(EnderecoApi enderecoApi) {
-        this.cep = enderecoApi.getCep();
-        this.uf = enderecoApi.getUf();
-        this.cidade = enderecoApi.getCidade();
-        this.bairro = enderecoApi.getBairro();
-        this.rua = enderecoApi.getRua();
+    public EnderecoDTO(EnderecoApiDTO enderecoApiDTO) {
+        this.cep = enderecoApiDTO.getCep();
+        this.uf = enderecoApiDTO.getUf();
+        this.cidade = enderecoApiDTO.getCidade();
+        this.bairro = enderecoApiDTO.getBairro();
+        this.rua = enderecoApiDTO.getRua();
     }
 }

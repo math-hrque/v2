@@ -207,7 +207,20 @@ public class PedidoService {
         }
     }
 
-    public ResponseEntity<List<PedidoDTO>> listarPorCliente(@PathVariable("idCliente") Long idCliente) {
+    public ResponseEntity<List<PedidoDTO>> listarPorIdUsuario(@PathVariable("idUsuario") Long idUsuario) {
+        Optional<List<Pedido>> listaPedidoBD = pedidoRepository.findByClienteUsuarioIdUsuario(idUsuario);
+        if (listaPedidoBD.get().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            List<PedidoDTO> listaPedidoDTO = listaPedidoBD.get().stream().map(pedido -> {
+                PedidoDTO pedidoDTO = new PedidoDTO(pedido);
+                return pedidoDTO;
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(listaPedidoDTO);
+        }
+    }
+
+    public ResponseEntity<List<PedidoDTO>> listarPorIdCliente(@PathVariable("idCliente") Long idCliente) {
         Optional<List<Pedido>> listaPedidoBD = pedidoRepository.findByClienteIdCliente(idCliente);
         if (listaPedidoBD.get().isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -228,15 +241,13 @@ public class PedidoService {
     }
 
     public boolean validaDadosAtualizarPedidoPorCliente(PedidoDTO pedidoDTO) {
-        boolean numeroPedidoValido = pedidoDTO.getNumeroPedido() != 0;
         boolean situacaoValida = !pedidoDTO.getSituacao().toString().isEmpty();
-        return numeroPedidoValido && situacaoValida;
+        return situacaoValida;
     }
 
     public boolean validaDadosAtualizarPedidoPorFuncionario(PedidoDTO pedidoDTO) {
-        boolean numeroPedidoValido = pedidoDTO.getNumeroPedido() != 0;
         boolean situacaoValida = !pedidoDTO.getSituacao().toString().isEmpty();
-        return numeroPedidoValido && situacaoValida;
+        return situacaoValida;
     }
     
 }

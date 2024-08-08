@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lol.lol.dto.PedidoDTO;
@@ -39,9 +40,9 @@ public class PedidoREST {
         return pedidoService.atualizarPorFuncionario(numeroPedido, pedidoDTO);
     }
 
-    @GetMapping("/consultar/{numeroPedido}")
-    public ResponseEntity<PedidoDTO> consultar(@PathVariable("numeroPedido") Long numeroPedido) {
-        return pedidoService.consultar(numeroPedido);
+    @GetMapping("/consultar")
+    public ResponseEntity<PedidoDTO> consultar(@RequestParam("numeroPedido") Long numeroPedido, @RequestParam("idCliente") Long idCliente) {
+        return pedidoService.consultar(numeroPedido, idCliente);
     }
 
     @GetMapping("/listar")

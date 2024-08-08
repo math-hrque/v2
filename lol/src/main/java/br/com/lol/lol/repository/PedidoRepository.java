@@ -13,6 +13,7 @@ import br.com.lol.lol.model.Pedido;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     Optional<Pedido> findByNumeroPedido(Long numeroPedido);
+    Optional<Pedido> findByNumeroPedidoAndClienteIdCliente(Long numeroPedido, Long idCliente);
     Optional<List<Pedido>> findByClienteIdCliente(Long idCliente);
     Optional<List<Pedido>> findByClienteUsuarioIdUsuario(Long idUsuario);
     Optional<List<Pedido>> findByDataPagamentoBetween(OffsetDateTime dataDe, OffsetDateTime dataAte);

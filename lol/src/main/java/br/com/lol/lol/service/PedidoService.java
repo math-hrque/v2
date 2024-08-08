@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.lol.lol.dto.PedidoDTO;
 import br.com.lol.lol.enums.TipoSituacao;
@@ -184,8 +185,8 @@ public class PedidoService {
         }
     }
 
-    public ResponseEntity<PedidoDTO> consultar(@PathVariable("numeroPedido") Long numeroPedido) {
-        Optional<Pedido> pedidoBD = pedidoRepository.findByNumeroPedido(numeroPedido);
+    public ResponseEntity<PedidoDTO> consultar(@RequestParam("numeroPedido") Long numeroPedido, @RequestParam("idCliente") Long idCliente) {
+        Optional<Pedido> pedidoBD = pedidoRepository.findByNumeroPedidoAndClienteIdCliente(numeroPedido, idCliente);
         if (pedidoBD.isPresent()) {
             PedidoDTO pedidoDTO = new PedidoDTO(pedidoBD.get());
             return ResponseEntity.ok(pedidoDTO);
